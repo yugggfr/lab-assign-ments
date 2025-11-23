@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yug sales </title>
+ 
+    
+    <style>
+        /* Embedded CSS from style.css */
+        :root {
+            /* Light Mode Variables */
+            --color-primary: #5A67D8; /* Indigo */
+            --color-secondary: #805AD5; /* Purple */
+            --color-light-bg: #F7FAFC; /* Main Light Gray Background */
+            --color-surface: white; /* Header, Card, Sidebar, Form BG */
+            --color-dark-text: #1A202C; /* Primary text in light mode */
+            --color-light-text: #2D3748;
+            --color-footer-bg: #1A202C; /* Dark Gray Footer */
+            --color-footer-text: #F7FAFC; /* Light Text in Footer */
+            --color-accent: #38A169; /* Green for stock/cart */
+
+            /* Dark Mode Variables */
+            --dm-bg: #1A202C;
+            --dm-surface: #2D3748;
+            --dm-text: #F7FAFC;
+            --dm-shadow: rgba(255, 255, 255, 0.1);
+            
+            /* Spacing Variables */
+            --space-m: 1rem;
+            --space-l: 2rem;
+        }
+
+        /* Base Styling (Uses Light Mode variables by default) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Smooth transition for dark/light mode switch */
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-light-text);
+            background-color: var(--color-light-bg);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--color-primary);
+        }
+
+        /* --- Dark Mode Styles --- */
+        .dark-mode {
+            color: var(--dm-text);
+            background-color: var(--dm-bg);
+        }
+
+        .dark-mode .site-header,
+        .dark-mode .sidebar,
+        .dark-mode .product-card,
+        .dark-mode .inquiry-form-section,
+        .dark-mode .about-content {
+            background-color: var(--dm-surface);
+            box-shadow: 0 4px 6px var(--dm-shadow);
+        }
+
+        .dark-mode .logo a,
+        .dark-mode .sidebar h3,
+        .dark-mode h2,
+        .dark-mode h4,
+        .dark-mode .about-content h1 {
+            color: var(--dm-text);
+        }
+
+        .dark-mode .main-nav a,
+        .dark-mode .filter-group a,
+        .dark-mode .form-group label {
+            color: var(--dm-text);
+        }
+
+        .dark-mode .form-group input,
+        .dark-mode .form-group textarea {
+            background-color: var(--dm-bg);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--dm-text);
+        }
+        .dark-mode .form-group input::placeholder,
+        .dark-mode .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .dark-mode .product-card img {
+            background-color: var(--dm-surface);
+        }
+        .dark-mode .product-card:hover {
+            box-shadow: 0 10px 15px var(--dm-shadow);
+        }
+        .dark-mode .welcome-message {
+            background-color: var(--dm-bg);
+        }
+        .dark-mode #mode-toggle, .dark-mode .mode-toggle-mobile {
+            color: var(--dm-text);
+        }
+
+
+        /* Skip to Main Content (Accessibility) */
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            z-index: -999;
+        }
+        .skip-link:focus {
+            left: 50%;
+            top: 10px;
+            width: auto;
+            height: auto;
+            padding: 0.5rem 1rem;
+            background: white;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            z-index: 999;
+            transform: translateX(-50%);
+        }
+        .dark-mode .skip-link:focus {
+            background: var(--dm-surface);
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+
+        /* --- Header (Flexbox) --- */
+        .site-header {
+            background-color: var(--color-surface);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem var(--space-l);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-dark-text);
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            gap: var(--space-l);
+        }
+
+        .main-nav a {
+            font-weight: 600;
+            padding: 0.5rem 0;
+            color: var(--color-text);
+            transition: color 0.2s ease;
+        }
+        .main-nav a:hover {
+            color: var(--color-secondary);
+        }
+
+        .cart-icon {
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-m);
+        }
+        .cart-icon span[role="button"]::before {
+            content: '🛒';
+        }
+        /* NOTE: Cart count styling removed as requested */
+
+        /* Dark Mode Toggle Button */
+        #mode-toggle, .mode-toggle-mobile {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            color: var(--color-dark-text);
+        }
+
+
+        /* --- Main Layout (Grid) --- */
+        .main-content {
+            max-width: 1200px;
+            margin: var(--space-l) auto;
+            padding: 0 var(--space-l);
+            display: grid;
+            /* Default layout for desktop: sidebar(1fr) + products(4fr) */
+            grid-template-columns: 1fr 4fr;
+            gap: var(--space-l);
+        }
+
+        /* --- Sidebar (Aside) --- */
+        .sidebar {
+            background-color: var(--color-surface);
+            padding: var(--space-l);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar h3 {
+            font-size: 1.2rem;
+            margin-bottom: var(--space-m);
+            color: var(--color-dark-text);
+            border-bottom: 2px solid var(--color-light-bg);
+            padding-bottom: 0.5rem;
+        }
+        .dark-mode .sidebar h3 {
+            border-bottom-color: var(--dm-bg);
+        }
+
+        .filter-group ul {
+            list-style: none;
+            margin-bottom: var(--space-l);
+        }
+
+        .filter-group a {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--color-text);
+            transition: color 0.2s ease;
+        }
+        .filter-group a:hover {
+            color: var(--color-primary);
+        }
+
+        /* --- Product Grid (Section) --- */
+        .product-list {
+            display: grid;
+            /* Updated Grid for Desktop: 3 columns for 6 products */
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-m);
+        }
+
+        /* Product Card (Article) */
+        .product-card {
+            background-color: var(--color-surface);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background-color: var(--color-light-bg);
+        }
+
+        .product-info {
+            padding: var(--space-m);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--color-dark-text);
+        }
+        .dark-mode .product-info h4 {
+            color: var(--dm-text);
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            background-color: var(--color-accent);
+        }
+
+        .btn-add-to-cart {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.2s ease;
+        }
+        .btn-add-to-cart:hover {
+            background-color: var(--color-secondary);
+        }
+        
+        /* --- About Page Specific Styling (Reused for Internal Section) --- */
+        .about-content {
+            grid-column: 1 / -1; /* Make this section full width */
+            max-width: 800px;
+            margin: var(--space-l) auto;
+            padding: var(--space-l);
+            background-color: var(--color-surface);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .about-content h1 {
+            font-size: 2rem;
+            color: var(--color-dark-text);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 0.5rem;
+        }
+        .about-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .welcome-message {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-top: 2rem;
+            padding: 1rem;
+            border-left: 5px solid var(--color-secondary);
+            background-color: var(--color-light-bg);
+            border-radius: 4px;
+            overflow: auto; /* Clear the float */
+        }
+        .about-owner-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* Makes it circular */
+            object-fit: cover;
+            margin-right: 1.5rem;
+            float: left;
+            shape-outside: circle(50%);
+            margin-bottom: 1rem;
+        }
+
+
+        /* --- Footer (Flexbox) --- */
+        .site-footer {
+            background-color: var(--color-footer-bg);
+            color: var(--color-footer-text);
+            padding: var(--space-l);
+            margin-top: var(--space-l);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: var(--space-l);
+        }
+
+        .footer-section {
+            flex: 1 1 200px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: var(--space-m);
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: var(--color-footer-text);
+            display: block;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+        .footer-section a:hover {
+            color: var(--color-primary);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            padding-top: var(--space-m);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            margin-top: var(--space-l);
+        }
+
+        /* WhatsApp Styling */
+        .whatsapp-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #25D366; /* WhatsApp Green */
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .whatsapp-link:hover {
+            text-decoration: underline;
+        }
+        .whatsapp-icon {
+            font-size: 1.2rem;
+            /* Using a common emoji as a logo placeholder */
+            content: '💬';
+        }
+        /* Style the prominent contact area */
+        .direct-contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .direct-contact-info p {
+            margin: 0;
+        }
+
+
+        /* --- Form (Inquiry) Styling --- */
+        .inquiry-form-section {
+            max-width: 600px;
+            margin: var(--space-l) auto;
+            padding: var(--space-l);
+            background-color: var(--color-surface);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* All form specific groups/elements removed as requested */
+
+
+        /* --- MEDIA QUERIES (Responsiveness) --- */
+
+        /* Tablet Layout (~768px and below) */
+        @media (max-width: 1024px) {
+            .main-content {
+                /* Sidebar on top, full width */
+                grid-template-columns: 1fr; 
+                gap: var(--space-m);
+            }
+
+            .product-list {
+                /* Reduce columns to 2 */
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile Layout (~600px and below) */
+        @media (max-width: 600px) {
+            .nav-container {
+                /* Stack logo and navigation vertically, center items */
+                flex-direction: column;
+                padding: var(--space-m);
+            }
+
+            .main-nav {
+                width: 100%; /* Take full width */
+                order: 1; /* Move navigation below logo */
+                margin: 0.5rem 0;
+            }
+
+            .main-nav ul {
+                justify-content: space-around;
+                gap: 1rem;
+            }
+            
+            .cart-icon {
+                display: none; /* Hide cart and desktop toggle on very small screens to simplify header */
+            }
+
+            /* Show mobile-only dark mode toggle */
+            .mode-toggle-mobile {
+                display: block !important;
+                order: -1;
+                align-self: flex-end;
+            }
+
+            .product-list {
+                /* Single column layout for mobile */
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: var(--space-m);
+            }
+
+            .footer-section {
+                flex: 1 1 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+        <div class="nav-container">
+            <div class="logo"><a href="#top">Yug sales</a></div>
+            
+            <nav class="main-nav" aria-label="Primary Navigation">
+                <ul>
+                    <li><a href="#products">Shop All</a></li>
+                    <li><a href="#about-us">About</a></li>
+                    <li><a href="#contact-info">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Dark Mode Toggle and Cart Icon (Desktop) -->
+            <div class="cart-icon" role="group" aria-label="Utilities">
+                
+                <span role="button" aria-label="Shopping Cart">
+                    <!-- Cart logo kept, count removed -->
+                </span>
+            </div>
+            <!-- Mobile-only dark mode toggle (hidden by default in CSS) -->
+            <button id="mode-toggle-mobile" class="mode-toggle-mobile" style="display: none;" aria-label="Toggle Dark Mode">☀️</button>
+        </div>
+    </header>
+
+    <main class="main-content" id="main-content">
+        <!-- Filter Sidebar -->
+        <aside class="sidebar" aria-label="Product Filters">
+            <h3>Filter Products</h3>
+            
+            <section class="filter-group">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#">Laptops & Desktops</a></li>
+                    <li><a href="#">Smartphones</a></li>
+                    <li><a href="#">Accessories</a></li>
+                    <li><a href="#">Gaming Gear</a></li>
+                    <li><a href="#">Storage & Memory</a></li>
+                    <li><a href="#">Cameras & Drones</a></li>
+                </ul>
+            </section>
+            
+            <section class="filter-group">
+                <h4>Price Range (UI Only)</h4>
+                <form onsubmit="alert('Filtering is a UI element in this assignment. To make it functional, JavaScript is needed!'); return false;">
+                    <div class="form-group">
+                        <label for="price-min">Min Price ($)</label>
+                        <input type="number" id="price-min" placeholder="50" min="0" value="50" aria-label="Minimum Price">
+                    </div>
+                    <div class="form-group">
+                        <label for="price-max">Max Price ($)</label>
+                        <input type="number" id="price-max" placeholder="1500" min="50" value="1500" aria-label="Maximum Price">
+                    </div>
+                    <button class="btn-submit" type="submit">Apply Filters</button>
+                </form>
+            </section>
+        </aside>
+
+        <!-- Product Listing Grid (6 Products) -->
+        <section class="product-list" id="products" aria-label="Product Listings">
+            
+            <!-- PRODUCT 1: High-end Laptop -->
+            <article class="product-card" data-price="1299">
+                <img src="Asus.jpg" alt="High-end professional laptop."
+                <div class="product-info">
+                    <div>
+                        <span class="status-badge">In Stock</span>
+                        <h4>Laptop Pro X1 Carbon Gen 12</h4>
+                        <p class="price">₹90,000</p>
+                    </div>
+                    <button class="btn-add-to-cart" aria-label="Add Laptop Pro X1 Carbon to cart">Add to Cart</button>
+                </div>
+            </article>
+
+            <!-- PRODUCT 2: Smartphone -->
+            <article class="product-card" data-price="999">
+                <img src="750971IM.webp" alt="Latest model smartphone in purple." 
+                    <div>
+                        <span class="status-badge">Low Stock</span>
+                        <h4>Smartphone Ultra 15 Pro</h4>
+                        <p class="price">₹50,000</p>
+                    </div>
+                    <button class="btn-add-to-cart" aria-label="Add Smartphone Ultra 15 to cart">Add to Cart</button>
+                </div>
+            </article>
+
+            <!-- PRODUCT 3: Headphones -->
+            <article class="product-card" data-price="249">
+                <img src="Hesh_ANC_buy_box_white_1_17ca08b7-f957-4fc7-9a0a-9537f6ae26fd.webp" alt="Noise-cancelling wireless over-ear headphones." 
+                <div class="product-info">
+                    <div>
+                        <span class="status-badge">In Stock</span>
+                        <h4>Aura Noise Cancelling Headphones</h4>
+                        <p class="price">₹4000</p>
+                    </div>
+                    <button class="btn-add-to-cart" aria-label="Add Aura Noise Cancelling Headphones to cart">Add to Cart</button>
+                </div>
+            </article>
+            
+            <!-- PRODUCT 4: Keyboard -->
+            <article class="product-card" data-price="150">
+                <img src="65285dbda8db60353b7b4b61-compact-60-mechanical-gaming-keyboard.jpg" alt="Compact mechanical gaming keyboard."
+                <div class="product-info">
+                    <div>
+                        <span class="status-badge">In Stock</span>
+                        <h4>Apex Mechanical Keyboard TKL</h4>
+                        <p class="price">₹3000</p>
+                    </div>
+                    <button class="btn-add-to-cart" aria-label="Add Apex Mechanical Keyboard to cart">Add to Cart</button>
+                </div>
+            </article>
+
+            <!-- PRODUCT 5: Gaming Mouse -->
+            <article class="product-card" data-price="75">
+                <img src="design-medium.jpg" alt="Ergonomic high-DPI gaming mouse." 
+                    <div>
+                        <span class="status-badge">In Stock</span>
+                        <h4>Phantom Wireless Gaming Mouse</h4>
+                        <p class="price">₹2000</p>
+                    </div>
+                    <button class="btn-add-to-cart" aria-label="Add Phantom Gaming Mouse to cart">Add to Cart</button>
+                </div>
+            </article>
+            
+            <!-- PRODUCT 6: Portable SSD -->
+            <article class="product-card" data-price="120">
+                <img src="images.jpg" alt="1TB Portable Solid State Drive." 
+                <div class="product-info">
+                    <div>
+                        <span class="status-badge">In Stock</span>
+                        <h4>Blaze 1TB Portable SSD</h4>
+                        <p class="price">₹4000</p>
+                    </div>
+                    <button class="btn-add-to-cart">Add to Cart</button>
+                </div>
+            </article>
+
+        </section>
+    </main>
+    
+    <!-- About Us Section -->
+    <section class="about-content" id="about-us" aria-labelledby="about-heading">
+        <h1 id="about-heading">Our Story: Built on a Passion for Tech</h1>
+        
+        <!-- Owner's Picture and Message -->
+        <img class="about-owner-pic" src="WhatsApp Image 2025-11-23 at 23.12.51_eb047d05.jpg" alt="A photo of Yug, the CEO." 
+        
+        <p class="welcome-message">
+            Hie, I'm Yug, the CEO of Yug Sales. This is a tech item based e-store! I hope my team's services and the great items we offer satisfy you.
+        </p>
+        
+        <p>Welcome to yug sales, your trusted source for the latest gadgets, components, and electronic accessories. We started this store with a simple belief: everyone should have access to quality technology without complexity.</p>
+        
+        <h3>Our Commitment</h3>
+        <p>Every product we list is carefully chosen for its quality and value. We focus purely on technology so we can be experts in what we sell, ensuring you get accurate information and the best recommendations.</p>
+        
+        <p>We are a small, dedicated team committed to providing fast shipping and friendly support. Thank you for supporting our mission!</p>
+
+    </section>
+
+    <!-- Inquiry Form Section  -->
+    <section class="inquiry-form-section" id="contact-info" aria-label="Direct Contact Information">
+        <h2>Got Questions? Reach Out Directly!</h2>
+        
+        <p>For immediate support or inquiries, please contact Yug Sales using the number below:</p>
+        
+        <div class="direct-contact-info">
+            <!-- WhatsApp Link and Number -->
+            <a class="whatsapp-link" href="https://wa.me/9211625907" target="_blank" aria-label="Text us on WhatsApp 9900999000">
+                <span class="whatsapp-icon"></span>
+                WhatsApp: 9211625907
+            </a>
+        </div>
+        
+    </section>
+
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about-us">About Yug Sales</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Yug Sales</h4>
+                <a class="whatsapp-link" href="https://wa.me/919900999000" target="_blank">
+                    <span class="whatsapp-icon"></span>
+                    Text on WhatsApp: 9900999000
+                </a>
+            </div>
+        </div>
+        <p class="copyright">© 2024 Yug Sales. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
